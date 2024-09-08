@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -45,10 +46,11 @@ class DatabaseHelper {
     required List<int> imagePath,
   }) async {
     Database db = await database;
+
     return await db.insert('calculate', {
       'input': input,
       'result': result,
-      'imagePath': imagePath,
+      'imagePath': Uint8List.fromList(imagePath),
     });
   }
 

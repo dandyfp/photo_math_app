@@ -4,6 +4,9 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:math_expressions/math_expressions.dart';
+import 'package:photo_math_app/src/presentation/home/bloc/get_list_data_bloc.dart';
+import 'package:photo_math_app/src/presentation/image/bloc/add_data_calculation_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PreviewImagePage extends StatefulWidget {
   final File? imageFile;
@@ -23,6 +26,11 @@ class _PreviewImagePageState extends State<PreviewImagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: const Text('Back'),
+        centerTitle: false,
+      ),
       body: Center(
         child: Column(
           children: [
@@ -67,9 +75,19 @@ class _PreviewImagePageState extends State<PreviewImagePage> {
             const SnackBar(content: Text("Input can't be calculate")));
       });
     } else {
-      setState(() {
-        resCalculate = eval.toInt().toString();
-      });
+      setState(
+        () {
+          resCalculate = eval.toInt().toString();
+          context.read<AddDataCalculationBloc>().add(
+                AddDataCalculationEvent.addData(
+                  res: resCalculate ?? '',
+                  input: resInput ?? '',
+                  imagePath: widget.imageFile!.readAsBytesSync(),
+                ),
+              );
+          context.read<GetListDataBloc>().add(const GetListDataEvent.getData());
+        },
+      );
     }
 
     return eval;

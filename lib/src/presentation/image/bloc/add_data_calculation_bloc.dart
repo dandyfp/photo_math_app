@@ -20,10 +20,10 @@ class AddDataCalculationBloc
 
         return result.fold(
           (l) {
-            AddDataCalculationState.loaded(l);
+            emit(AddDataCalculationState.loaded(l));
           },
           (r) {
-            AddDataCalculationState.error(r);
+            emit(AddDataCalculationState.error(r));
           },
         );
       },
